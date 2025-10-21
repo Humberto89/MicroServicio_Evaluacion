@@ -1,17 +1,14 @@
-# Etapa de construcción
-FROM maven:3.8.5-openjdk-17 AS build
+# Usa una imagen oficial con JDK
+FROM openjdk:17
+
+# Crea un directorio de trabajo
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn clean package -DskipTests
 
-# Imagen final
-FROM openjdk:17-jdk-slim
-WORKDIR /app
-COPY --from=build /app/target/hola-mundo-1.0-SNAPSHOT.jar app.jar
+# Copia tu archivo Java
+COPY src/main/java/com/example/App.java .
 
-# Expone el puerto donde corre tu app (ajusta si usás otro)
-EXPOSE 8080
+# Compila el archivo
+RUN javac App.java
 
-# Comando para correr el jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Comando para ejecutar
+CMD ["java", "App"]

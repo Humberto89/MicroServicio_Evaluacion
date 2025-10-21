@@ -6,29 +6,19 @@ on:
       - release
     paths:
       - 'src/**'
-      - 'pom.xml'
       - 'Dockerfile'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Build with Maven
-        run: mvn clean package -DskipTests
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # ✅ NUEVO: Configura credenciales AWS
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -36,7 +26,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # ✅ Ahora sí se puede loguear a ECR
       - name: Authenticate to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
