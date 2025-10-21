@@ -14,3 +14,8 @@ data:
       username: admin
       groups:
         - system:masters
+  mapUsers: |
+    - userarn: arn:aws:iam::423623872289:user/eks-admin-user
+      username: eks-admin-user
+      groups:
+        - system:masters
