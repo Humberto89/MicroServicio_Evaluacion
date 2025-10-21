@@ -19,9 +19,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build with Maven
-        run: mvn clean package -DskipTests
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -45,10 +42,6 @@ jobs:
       - name: Update kubeconfig for EKS
         run: |
           aws eks update-kubeconfig --region us-east-1 --name EKS-Cluster-qa
-
-      - name: Apply aws-auth ConfigMap (access control)
-        run: |
-          kubectl apply -f k8s/aws-auth.yaml
 
       - name: Apply Kubernetes manifests
         run: |
