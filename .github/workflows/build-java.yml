@@ -7,6 +7,7 @@ on:
     paths:
       - 'src/**'
       - 'Dockerfile'
+      - '.github/workflows/build-java.yml'
 
 jobs:
   build:
@@ -38,3 +39,17 @@ jobs:
           docker build -t $IMAGE_NAME .
           docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$IMAGE_NAME:latest
           docker push $ECR_REGISTRY/$IMAGE_NAME:latest
+
+      - name: Update kubeconfig for EKS
+        run: |
+          aws eks update-kubeconfig --region us-east-1 --name EKS-Cluster-qa
+
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+
+      - name: Rollout Deployment (actualizar pods)
+        run: |
+          kubectl rollout restart deployment hola-mundo -n dev
