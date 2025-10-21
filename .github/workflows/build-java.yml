@@ -28,6 +28,15 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # ✅ NUEVO: Configura credenciales AWS
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      # ✅ Ahora sí se puede loguear a ECR
       - name: Authenticate to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
